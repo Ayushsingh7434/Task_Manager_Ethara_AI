@@ -4,6 +4,8 @@ import axios from "axios";
 // For production: replace with your Railway backend URL
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
+console.log("API URL configured as:", BASE_URL);
+
 const instance = axios.create({
   baseURL: BASE_URL,
 });
