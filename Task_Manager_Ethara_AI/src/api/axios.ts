@@ -1,10 +1,24 @@
 import axios from "axios";
 
-// For local development: http://localhost:5000/api
-// For production: replace with your Railway backend URL
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+let BASE_URL = "http://localhost:5000/api"; // Default for local dev
 
-console.log("API URL configured as:", BASE_URL);
+// For production, load API URL from config.json
+if (!window.location.hostname.includes("localhost")) {
+  (async () => {
+    try {
+      const response = await fetch("/config.json");
+      if (response.ok) {
+        const config = await response.json();
+        BASE_URL = config.apiUrl || BASE_URL;
+        console.log("Production API URL loaded:", BASE_URL);
+      }
+    } catch (error) {
+      console.warn("Could not load config.json, using default API URL:", BASE_URL);
+    }
+  })();
+}
+
+console.log("API URL:", BASE_URL);
 
 const instance = axios.create({
   baseURL: BASE_URL,
